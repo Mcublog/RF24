@@ -568,8 +568,6 @@ void RF24::_init_obj()
 
     #if defined (RF24_SPI_PTR) && !defined (RF24_RP2)
     _spi = &SPI;
-    #elif defined (STM32)
-    spi = SPI();
     #endif // defined (RF24_SPI_PTR)
 
     pipe0_reading_address[0] = 0;
