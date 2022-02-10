@@ -12,6 +12,22 @@
 
 #include "spi.h"
 #include "stm32f4xx_hal.h"
+#include "stm32_gpio.hpp"
+
+/**
+ * @brief Construct a new SPI::SPI object
+ *
+ */
+SPI::SPI()
+{
+
+}
+
+/**
+ * @brief Destroy the SPI::SPI object
+ *
+ */
+SPI::~SPI(){};
 
 /**
  * Transfer a single byte
@@ -20,9 +36,8 @@
  */
 uint8_t SPI::transfer(uint8_t tx_)
 {
-    auto hspiP = GetSpiHandle();
     uint8_t data_rx = 0;
-    HAL_SPI_TransmitReceive(hspiP, &tx_, &data_rx, 1, 10);
+    HAL_SPI_TransmitReceive(&hspi1, &tx_, &data_rx, 1, 10);
     return data_rx;
 }
 
@@ -34,8 +49,7 @@ uint8_t SPI::transfer(uint8_t tx_)
  */
 void SPI::transfernb(char* tbuf, char* rbuf, uint32_t len)
 {
-    auto hspiP = GetSpiHandle();
-    HAL_SPI_TransmitReceive(hspiP, reinterpret_cast<uint8_t *>(tbuf), reinterpret_cast<uint8_t *>(rbuf), len, 10);
+    HAL_SPI_TransmitReceive(&hspi1, reinterpret_cast<uint8_t *>(tbuf), reinterpret_cast<uint8_t *>(rbuf), len, 10);
 }
 
 /**
@@ -45,11 +59,5 @@ void SPI::transfernb(char* tbuf, char* rbuf, uint32_t len)
  */
 void SPI::transfern(char* buf, uint32_t len)
 {
-    auto hspiP = GetSpiHandle();
-    HAL_SPI_Transmit(hspiP, reinterpret_cast<uint8_t *>(buf), len, 10);
-}
-
-void chipSelect(bool mode)
-{
-
+    HAL_SPI_Transmit(&hspi1, reinterpret_cast<uint8_t *>(buf), len, 10);
 }

@@ -38,7 +38,7 @@ public:
 	 * @param tx_ Byte to send
 	 * @return Data returned via spi
 	 */
-	uint8_t transfer(uint8_t tx_);
+	static uint8_t transfer(uint8_t tx_);
 
 	/**
 	 * Transfer a buffer of data
@@ -46,26 +46,18 @@ public:
 	 * @param rbuf Receive buffer
 	 * @param len Length of the data
 	 */
-	void transfernb(char* tbuf, char* rbuf, uint32_t len);
+	static void transfernb(char* tbuf, char* rbuf, uint32_t len);
 
 	/**
 	 * Transfer a buffer of data without an rx buffer
 	 * @param buf Pointer to a buffer of data
 	 * @param len Length of the data
 	 */
-	void transfern(char* buf, uint32_t len);
-
-
-	/**
-	 * @brief Chip select control function
-	 *
-	 * @param mode
-	 */
-	void chipSelect(bool mode);
+	static void transfern(char* buf, uint32_t len);
 
 #ifndef DOXYGEN_FORCED
 // exclude this line from the docs to prevent warnings docs generators
-	virtual ~ SPI();
+	~ SPI();
 #endif
 private:
 

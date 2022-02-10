@@ -91,7 +91,7 @@ void RF24::csn(bool mode)
         _SPI.chipSelect(csn_pin);
     #endif // defined(RF24_RPi)
     #if defined (STM32)
-        spi.chipSelect(mode);
+        stm32_write_cs(mode);
     #elif !defined(RF24_LINUX)
         digitalWrite(csn_pin, mode);
         delayMicroseconds(csDelay);
@@ -104,10 +104,14 @@ void RF24::csn(bool mode)
 
 void RF24::ce(bool level)
 {
-    //Allow for 3-pin use on ATTiny
-    //if (ce_pin != csn_pin) {
-    //    digitalWrite(ce_pin, level);
-    //}
+    #if !defined (STM32)
+    // Allow for 3-pin use on ATTiny
+    if (ce_pin != csn_pin) {
+       digitalWrite(ce_pin, level);
+    }
+    #else
+    stm32_write_ce(level);
+    #endif
 }
 
 /****************************************************************************/
@@ -564,6 +568,8 @@ void RF24::_init_obj()
 
     #if defined (RF24_SPI_PTR) && !defined (RF24_RP2)
     _spi = &SPI;
+    #elif defined (STM32)
+    spi = SPI();
     #endif // defined (RF24_SPI_PTR)
 
     pipe0_reading_address[0] = 0;
@@ -1015,7 +1021,9 @@ bool RF24::_init_pins()
     csn(HIGH);
     delay(200);
     #elif defined(STM32)
-    // TODO: add pin init
+    ce(LOW);
+    csn(HIGH);
+    delay(100);
 
     #else // using an Arduino platform
 

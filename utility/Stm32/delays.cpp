@@ -10,6 +10,7 @@
  */
 #include "delays.hpp"
 
+#include "tim.h"
 #include "stm32f4xx_hal.h"
 /**
  * @brief
@@ -28,7 +29,8 @@ void stm32_delay_ms(int ms)
  */
 void stm32_delay_us(int microseconds)
 {
-    // TODO: add implementation
+    __HAL_TIM_SET_COUNTER(&htim14,0);  // set the counter value a 0
+    while (__HAL_TIM_GET_COUNTER(&htim14) < microseconds);  // wait for the counter to reach the us input in the parameter
 }
 
 unsigned int stm32_millis(void)

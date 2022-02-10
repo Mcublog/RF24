@@ -23,6 +23,9 @@
 
 #include "log_libs.h"
 
+#include "spi_wrapper.hpp"
+#include "stm32_gpio.hpp"
+
 //#define RF24_SPI_SPEED RF24_SPIDEV_SPEED
 
 #define _BV(x) (1<<(x))
@@ -56,8 +59,8 @@ typedef uint16_t prog_uint16_t;
 #define pgm_read_ptr(p) (*(p))
 
 // Function, constant map as a result of migrating from Arduino
-#define LOW GPIO_PIN_RESET
-#define HIGH GPIO_PIN_SET
+#define LOW false
+#define HIGH true
 #define INPUT GPIO_MODE_INPUT
 #define OUTPUT GPIO_MODE_OUTPUT_PP
 //#define digitalWrite(pin, value) GPIO::write(pin, value)
