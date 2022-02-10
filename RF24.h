@@ -21,6 +21,8 @@
     #include "utility/includes.h"
 #elif defined SOFTSPI
     #include <DigitalIO.h>
+#elif defined STM32
+    #include "spi_wrapper.hpp"
 #endif
 
 
@@ -118,7 +120,7 @@ private:
     SPIUARTClass uspi;
     #endif
 
-    #if defined (RF24_LINUX) || defined (XMEGA_D3) || defined (RF24_RP2) /* XMEGA can use SPI class */
+    #if defined (RF24_LINUX) || defined (XMEGA_D3) || defined (RF24_RP2) || defined (STM32)/* XMEGA can use SPI class */
     SPI spi;
     #endif // defined (RF24_LINUX) || defined (XMEGA_D3)
     #if defined (RF24_SPI_PTR)
@@ -649,10 +651,10 @@ public:
      *
      * This function is not available in the python wrapper because it is intended for
      * use on processors with very limited available resources.
-     * 
+     *
      * @remark
      * This function uses much less ram than other `*print*Details()` methods.
-     * 
+     *
      * @code
      * uint8_t encoded_details[43] = {0};
      * radio.encodeRadioDetails(encoded_details);
@@ -661,7 +663,7 @@ public:
      * @param encoded_status The uint8_t array that RF24 radio details are
      * encoded into. This array must be at least 43 bytes in length; any less would surely
      * cause undefined behavior.
-     * 
+     *
      * Registers names and/or data corresponding to the index of the `encoded_details` array:
      * | index | register/data |
      * |------:|:--------------|

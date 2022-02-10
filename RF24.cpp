@@ -90,10 +90,11 @@ void RF24::csn(bool mode)
     if(!mode)
         _SPI.chipSelect(csn_pin);
     #endif // defined(RF24_RPi)
-
-    #if !defined(RF24_LINUX)
-    digitalWrite(csn_pin, mode);
-    delayMicroseconds(csDelay);
+    #if defined (STM32)
+        spi.chipSelect(mode);
+    #elif !defined(RF24_LINUX)
+        digitalWrite(csn_pin, mode);
+        delayMicroseconds(csDelay);
     #else
     static_cast<void>(mode); // ignore -Wunused-parameter
     #endif // !defined(RF24_LINUX)
@@ -104,9 +105,9 @@ void RF24::csn(bool mode)
 void RF24::ce(bool level)
 {
     //Allow for 3-pin use on ATTiny
-    if (ce_pin != csn_pin) {
-        digitalWrite(ce_pin, level);
-    }
+    //if (ce_pin != csn_pin) {
+    //    digitalWrite(ce_pin, level);
+    //}
 }
 
 /****************************************************************************/
@@ -530,7 +531,7 @@ uint8_t RF24::sprintf_address_register(char *out_buffer, uint8_t reg, uint8_t qt
         uint8_t* bufptr = read_buffer + addr_width;
         while (--bufptr >= read_buffer) {
             offset += sprintf_P(out_buffer + offset, PSTR("%02X"), *bufptr);
-        }    
+        }
     }
     delete[] read_buffer;
     return offset;
@@ -967,7 +968,8 @@ bool RF24::begin(void)
 
     #elif defined (RF24_RP2)
     _spi->begin(PICO_DEFAULT_SPI ? spi1 : spi0);
-
+    #elif defined (STM32)
+    spi.begin(1);
     #else // using an Arduino platform || defined (LITTLEWIRE)
 
         #if defined (RF24_SPI_PTR)
@@ -1012,6 +1014,8 @@ bool RF24::_init_pins()
     ce(LOW);
     csn(HIGH);
     delay(200);
+    #elif defined(STM32)
+    // TODO: add pin init
 
     #else // using an Arduino platform
 
