@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "stm32_types.h"
 #ifndef DOXYGEN_FORCED
 // exclude this line from the docs to prevent displaying in the list of classes
 class SPI
@@ -38,7 +39,7 @@ public:
 	 * @param tx_ Byte to send
 	 * @return Data returned via spi
 	 */
-	static uint8_t transfer(uint8_t tx_);
+	uint8_t transfer(uint8_t tx_);
 
 	/**
 	 * Transfer a buffer of data
@@ -46,14 +47,22 @@ public:
 	 * @param rbuf Receive buffer
 	 * @param len Length of the data
 	 */
-	static void transfernb(char* tbuf, char* rbuf, uint32_t len);
+	void transfernb(char* tbuf, char* rbuf, uint32_t len);
 
 	/**
 	 * Transfer a buffer of data without an rx buffer
 	 * @param buf Pointer to a buffer of data
 	 * @param len Length of the data
 	 */
-	static void transfern(char* buf, uint32_t len);
+	void transfern(char* buf, uint32_t len);
+
+	/**
+	 * @brief Unblock task with spi class from IRQ
+	 *
+	 */
+	void send_spi_notify_from_irq(TransferType_t notify, void *taskWokenP);
+
+	TransferType_t get_transfer_type();
 
 #ifndef DOXYGEN_FORCED
 // exclude this line from the docs to prevent warnings docs generators
@@ -63,6 +72,7 @@ private:
 
 	/** Default SPI device */
 	const char *device;
+	void *task_handle;
 	/** SPI Mode set */
 	uint8_t mode;
 	/** word size*/
@@ -71,8 +81,9 @@ private:
 	uint32_t speed;
 	int fd;
 
-	void init();
+	TransferType_t transfer_type;
 
+	void init();
 };
 
 /**@}*/

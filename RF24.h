@@ -280,6 +280,15 @@ public:
     bool begin(_SPI* spiBus, uint16_t _cepin, uint16_t _cspin);
     #endif // defined (RF24_SPI_PTR) || defined (DOXYGEN_FORCED)
 
+    #if defined (STM32)
+    /**
+     * @brief Get the Bus Info object
+     *
+     * @return void*
+     */
+    void *getBusInfo(void);
+    #endif
+
     /**
      * Same as begin(), but allows dynamically specifying a CE pin
      * and CSN pin to use.
