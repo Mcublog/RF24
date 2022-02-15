@@ -29,7 +29,7 @@ void stm32_delay_ms(int ms)
  */
 void stm32_delay_us(int microseconds)
 {
-    __HAL_TIM_SET_COUNTER(&htim14,0);  // set the counter value a 0
+    __HAL_TIM_SET_COUNTER(&htim14, 0);  // set the counter value a 0
     while (__HAL_TIM_GET_COUNTER(&htim14) < microseconds);  // wait for the counter to reach the us input in the parameter
 }
 
